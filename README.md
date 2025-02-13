@@ -81,9 +81,16 @@ docker-compose down
 
 ### Run ESLint for Code Linting
 ```bash
-npm run lint
+npm run lint!
+
 ```
+
+
 
 ## License
 This project is licensed under ISC. Created by han.
 
+![Screenshot from 2025-02-13 16-08-21](https://github.com/user-attachments/assets/2bdba7f8-caab-42e8-ba17-29a19ae3434b)
+![Screenshot from 2025-02-13 16-08-33](https://github.com/user-attachments/assets/f64adcaa-dff2-4e73-b162-bdbe6790742f)
+![Screenshot from 2025-02-13 16-08-43](https://github.com/user-attachments/assets/600f2f8a-0568-4963-b391-d929273301f1)
+![Screenshot from 2025-02-13 16-08-52](https://github.com/user-attachments/assets/2c17ccf9-7927-4969-9632-c72d71fda373)
