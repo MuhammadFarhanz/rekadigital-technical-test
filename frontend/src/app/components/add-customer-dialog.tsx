@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { useAddCustomer } from "@/lib/hooks/useAddCustomer";
+import { toast } from "sonner";
+import { error } from "console";
+import { AxiosError } from "axios";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("name is required"),
@@ -47,11 +50,21 @@ export function AddCustomerDialog() {
       address: "",
     },
     validationSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm, setFieldError }) => {
       mutate(values, {
         onSuccess: () => {
           setOpen(false);
           resetForm();
+          toast.success("Success creating customer");
+        },
+        onError: (err: any) => {
+          const errorMsg = err.response?.data?.errors;
+
+          if (errorMsg?.includes("Email")) {
+            setFieldError("email", errorMsg);
+          } else if (errorMsg?.includes("Phone")) {
+            setFieldError("phone", errorMsg);
+          }
         },
       });
     },
@@ -62,7 +75,7 @@ export function AddCustomerDialog() {
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="bg-white/20 text-white  hover:bg-gray-100 hover:text-black"
+          className="bg-white/20 text-white h-11  hover:bg-gray-100 hover:text-black"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add New Customer

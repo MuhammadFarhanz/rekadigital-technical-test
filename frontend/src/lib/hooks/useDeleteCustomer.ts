@@ -1,10 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "../axios";
+import { queryClient } from "../react-query";
 
 export const useDeleteCustomer = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (id) => {
       const response = await axiosInstance.delete(`/customer/${id}`);
@@ -15,7 +13,7 @@ export const useDeleteCustomer = () => {
     },
     onError: (error) => {
       // eslint-disable-next-line no-console
-      console.error("Error deleting customer:", error);
+      console.error("Error deleting customer:", error.message);
     },
   });
 };

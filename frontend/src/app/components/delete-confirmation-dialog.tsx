@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface DeleteConfirmationDialogProps {
   customerName: string;
@@ -26,6 +27,7 @@ export function DeleteConfirmationDialog({
   const handleConfirm = () => {
     onConfirm();
     setOpen(false);
+    toast.success("Success deleting customer");
   };
 
   return (

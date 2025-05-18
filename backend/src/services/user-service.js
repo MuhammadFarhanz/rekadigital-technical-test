@@ -19,23 +19,42 @@ const getAllCustomer = async (request) => {
 const addCustomer = async (request) => {
   const customer = validate(addCustomerValidation, request);
 
+  const conflictQuery = `
+    SELECT email, phone FROM customers 
+    WHERE email = $1 OR phone = $2
+    LIMIT 1;
+  `;
+
+  const { rows } = await pool.query(conflictQuery, [
+    customer.email,
+    customer.phone,
+  ]);
+
+  if (rows.length > 0) {
+    if (rows[0].email === customer.email) {
+      throw new ResponseError(400, "Email already exists");
+    }
+    if (rows[0].phone === customer.phone) {
+      throw new ResponseError(400, "Phone number already exists");
+    }
+  }
+
   const query = `
       INSERT INTO customers (name, email, phone, address, level, favorite_menu)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id;
     `;
 
-  const values = [
+  const { rows: newCustomer } = await pool.query(query, [
     customer.name,
     customer.email,
     customer.phone,
     customer.address,
     customer.level,
     customer.favorite_menu,
-  ];
+  ]);
 
-  const { rows } = await pool.query(query, values);
-  return { id: rows[0].id };
+  return { id: newCustomer[0].id };
 };
 
 const getDetailCustomer = async (request) => {

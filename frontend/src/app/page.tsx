@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Filter, RefreshCw, Pencil } from "lucide-react";
+import { Filter, RefreshCw, Pencil, Printer } from "lucide-react";
 import { Sidebar } from "./components/sidebar";
 import { TopMenu } from "./components/top-menu";
 import { AddCustomerDialog } from "./components/add-customer-dialog";
@@ -21,30 +21,17 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllCustomers } from "@/lib/hooks/useGetAllCustomers";
 import { useDeleteCustomer } from "@/lib/hooks/useDeleteCustomer";
 import { formatIDR } from "@/lib/utils";
-
-interface Product {
-  name: string;
-  quantity: number;
-}
-
-interface Customer {
-  id: number;
-  name: string;
-  level: string;
-  favorite_menu: string;
-  totalTransaction: number;
-  email: string;
-  phone: string;
-  address: string;
-  products: any;
-}
+import CustomerSkeleton from "./components/customer-skeleton";
+import { Customer } from "./interfaces/interface";
 
 export default function CustomerDashboard() {
   const mutation = useDeleteCustomer();
   const { data: customers } = useGetAllCustomers();
 
   const handleSaveCustomer = (updatedCustomer: Customer) => {
-    customers.map((c) => (c.id === updatedCustomer.id ? updatedCustomer : c));
+    customers.map((c: Customer) =>
+      c.id === updatedCustomer.id ? updatedCustomer : c
+    );
   };
 
   const handleDeleteCustomer = async (customerId: any) => {
@@ -100,31 +87,37 @@ export default function CustomerDashboard() {
               <div className="flex gap-4 text-white">
                 <AddCustomerDialog />
                 <div className="flex-1 flex gap-2">
-                  <div className="flex-1 relative flex-row justify-between">
+                  <div className="relative w-full flex items-center bg-slate-500">
                     <Input
                       placeholder="Search Customer"
-                      className="w-full bg-white/10 border-0 placeholder:text-white/60 text-white"
+                      className="w-full bg-white border-0 h-11 pr-14 text-black placeholder:text-black/60"
                     />
-                    {/* <Button
+                    <Button
                       variant="secondary"
-                      className="bg-white/10 text-primary hover:bg-gray-100"
+                      className="bg-[#6366F1] text-white absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 hover:text-black hover:bg-[#6366F1]/30"
                     >
                       Search
-                    </Button> */}
+                    </Button>
                   </div>
                   <Button
                     variant="default"
-                    className="bg-white/30 backdrop-blur-lg text-white hover:bg-gray-100 hover:text-black"
+                    className="bg-white/30 h-11 backdrop-blur-lg text-white hover:bg-gray-100 hover:text-black"
                   >
                     <Filter className="w-4 h-4 mr-2" />
                     Filter
                   </Button>
                   <Button
                     variant="secondary"
-                    className="bg-white/30 backdrop-blur-lg text-white hover:bg-gray-100 hover:text-black"
+                    className="bg-white/30 h-11 backdrop-blur-lg text-white hover:bg-gray-100 hover:text-black"
                   >
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Refresh
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="bg-white/30 h-11 backdrop-blur-lg text-white hover:bg-gray-100 hover:text-black"
+                  >
+                    <Printer className="w-4 h-4 " />
                   </Button>
                 </div>
               </div>
@@ -142,46 +135,52 @@ export default function CustomerDashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {customers?.map((customer: any) => (
-                    <TableRow key={customer.id}>
-                      <TableCell>{customer.name}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className={
-                            customer.level === "Warga"
-                              ? "bg-orange-100 text-orange-800"
-                              : customer.level === "Juragan"
-                              ? "bg-blue-100 text-blue-800"
-                              : customer.level === "Sultan"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-purple-100 text-purple-800"
-                          }
-                        >
-                          {customer.level}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{customer.favorite_menu}</TableCell>
-                      <TableCell>
-                        IDR {formatIDR(Number(customer?.total_transaction))}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <CustomerDetailDialog
-                            customerId={customer?.id}
-                            onSave={handleSaveCustomer}
-                          />
-                          <Button variant="ghost" size="icon">
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <DeleteConfirmationDialog
-                            customerName={customer.name}
-                            onConfirm={() => handleDeleteCustomer(customer.id)}
-                          />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {!customers ? (
+                    <CustomerSkeleton />
+                  ) : (
+                    customers?.map((customer: any) => (
+                      <TableRow key={customer.id}>
+                        <TableCell>{customer.name}</TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className={
+                              customer.level === "Warga"
+                                ? "bg-orange-100 text-orange-800"
+                                : customer.level === "Juragan"
+                                ? "bg-blue-100 text-blue-800"
+                                : customer.level === "Sultan"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-purple-100 text-purple-800"
+                            }
+                          >
+                            {customer.level}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{customer.favorite_menu}</TableCell>
+                        <TableCell>
+                          IDR {formatIDR(Number(customer?.total_transaction))}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <CustomerDetailDialog
+                              customerId={customer?.id}
+                              onSave={handleSaveCustomer}
+                            />
+                            <Button variant="ghost" size="icon">
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <DeleteConfirmationDialog
+                              customerName={customer.name}
+                              onConfirm={() =>
+                                handleDeleteCustomer(customer.id)
+                              }
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
                 </TableBody>
               </Table>
               <div className="flex items-center justify-between px-4 py-4 border-t">

@@ -14,7 +14,6 @@ export const pool = new pg.Pool({
   connectionTimeoutMillis: 10000,
 });
 
-// Test database connection
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
     console.error("❌ Database connection error:", err.stack);

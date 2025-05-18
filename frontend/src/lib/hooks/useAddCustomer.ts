@@ -1,20 +1,22 @@
+import { error } from "console";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import axiosInstance from "../axios";
+import { Customer } from "@/app/interfaces/interface";
+import { AxiosError } from "axios";
+import { queryClient } from "../react-query";
+import { toast } from "sonner";
 
 export const useAddCustomer = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (newCustomer) => {
+    mutationFn: (newCustomer: any) => {
       return axiosInstance.post("/customer", newCustomer);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
     },
-    onError: (error) => {
-      // eslint-disable-next-line no-console
-      console.log("Error Creating customer:", error);
-    },
+    // onError: (err: AxiosError<{ errors?: string }>) => {
+    //   toast.error(err.response?.data?.errors);
+    // },
   });
 };

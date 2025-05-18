@@ -20,7 +20,7 @@ CREATE TABLE products (
     stock INT NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    -- updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 

@@ -23,23 +23,7 @@ import { Eye } from "lucide-react";
 import { useViewDetailCustomer } from "@/lib/hooks/useViewDetailCustomer";
 import useUpdateTransaction from "@/lib/hooks/useUpdateTransaction";
 import { formatIDR } from "@/lib/utils";
-
-interface Customer {
-  id: number;
-  name: string;
-  level: string;
-  favorite_menu: string;
-  total_transaction: number;
-  email: string;
-  phone: string;
-  address: string;
-  order_history: {
-    transaction_id: string;
-    product_name: string;
-    quantity: number;
-    created_at: string;
-  }[];
-}
+import { Customer } from "../interfaces/interface";
 
 interface CustomerDetailDialogProps {
   customerId: number;
@@ -147,7 +131,7 @@ export function CustomerDetailDialog({
           </div>
           <div>
             <h3 className="font-semibold mb-2">Customer Status</h3>
-            <p>
+            <div>
               <span className="font-medium">Level:</span>{" "}
               <Badge
                 variant="secondary"
@@ -163,7 +147,7 @@ export function CustomerDetailDialog({
               >
                 {customer.level}
               </Badge>
-            </p>
+            </div>
             <p>
               <span className="font-medium">Favorite Menu:</span>{" "}
               {customer.favorite_menu}

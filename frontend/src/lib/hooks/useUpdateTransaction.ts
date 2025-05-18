@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "../axios";
+import { queryClient } from "../react-query";
 
 const useUpdateTransaction = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ transactionId, quantity }: any) => {
       const response = await axiosInstance.patch(
